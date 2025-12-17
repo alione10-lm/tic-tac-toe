@@ -1,7 +1,19 @@
 const container = document.querySelector(".buttons-container");
 
-const result = document.querySelector(".window");
+for (let index = 0; index < 9; index++) {
+  const Btn = document.createElement("button");
+  Btn.classList.add("btn");
+  container.appendChild(Btn);
+}
+
 const overlay = document.querySelector(".overlay");
+const resultText = document.querySelector(".result-text");
+const popupReset = document.querySelector(".popup-reset");
+
+const showResult = (message) => {
+  resultText.textContent = message;
+  overlay.style.display = "flex";
+};
 
 const correctCases = [
   [0, 1, 2],
@@ -17,20 +29,16 @@ const correctCases = [
 let player1 = [];
 let player2 = [];
 
-for (let index = 0; index < 9; index++) {
-  const Btn = document.createElement("button");
-  Btn.classList.add("btn");
-  container.appendChild(Btn);
-}
-
-function disableAllBtns() {
+const disableAllBtns = () => {
   return btns.forEach((btn) => (btn.disabled = true));
-}
+};
+
+popupReset.addEventListener("click", () => {
+  overlay.style.display = "none";
+  // reset();
+});
 
 const checkWinner = (player) => {
-  // return correctCases.some((caseWin) =>
-  //   caseWin.every((index) => player.includes(index))
-  // );
   for (let i = 0; i < correctCases.length; i++) {
     if (correctCases[i].every((index) => player.includes(index))) {
       return true;
@@ -52,11 +60,9 @@ btns.forEach((btn, ndx) =>
       btn.disabled = true;
 
       if (checkWinner(player1)) {
-        alert("Player 1 won 🎉");
+        showResult("Player 1 won 🎉");
 
         disableAllBtns();
-        // result.textContent = "Player 1 won 🎉";
-        // overlay.style.display = "block";
         return;
       }
     } else {
@@ -66,9 +72,8 @@ btns.forEach((btn, ndx) =>
       btn.disabled = true;
 
       if (checkWinner(player2)) {
-        alert("Player 2 won 🎉");
-        // result.textContent = "Player 1 won 🎉";
-        // overlay.style.display = "block";
+        showResult("Player 2 won 🎉");
+
         disableAllBtns();
         return;
       }
@@ -76,12 +81,12 @@ btns.forEach((btn, ndx) =>
     turn = !turn;
 
     if (player1.length + player2.length === 9) {
-      alert("draw 🤜🏼🤛🏼");
+      showResult("draw 🤜🏼🤛🏼");
     }
   })
 );
 
-const reset = () => {
+function reset() {
   btns.forEach((el) => {
     el.classList.remove("green");
     el.classList.remove("red");
@@ -93,7 +98,7 @@ const reset = () => {
     player2 = [];
     turn = true;
   });
-};
+}
 
 document.querySelector(".reset").addEventListener("click", () => {
   reset();
